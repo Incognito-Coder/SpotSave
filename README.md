@@ -1,4 +1,4 @@
-<h1 align="center"><b>🎸 SpotSave 🎵</b></h1>
+<h1 align="center"><b>🎸 SpotSave 🎵 v1.2</b></h1>
 
 ![Banner](image.png)
 ## Available on Telegram as [@SpotSaveBot](https://t.me/spotsavebot)
