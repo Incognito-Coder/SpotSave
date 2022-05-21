@@ -2,4 +2,3 @@ pyrogram
 pyromod
 tgcrypto
 spotdl
-ffmpeg
