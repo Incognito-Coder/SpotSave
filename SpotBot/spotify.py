@@ -4,10 +4,10 @@ from spotdl.search import SpotifyClient
 import re
 import os
 import subprocess
-from config import Configs
+from SpotBot.config import Configs
 
 SpotifyClient.init(client_id=Configs.CLIENT_ID,
-                client_secret=Configs.CLIENT_SECRET, user_auth=False)
+                   client_secret=Configs.CLIENT_SECRET, user_auth=False)
 
 
 async def MusicDownloader(query: str = None, format: str = None):
@@ -33,10 +33,7 @@ async def MusicDownloader(query: str = None, format: str = None):
         song = Gather.from_spotify_url(
             spotify_url=query, output_format=format, use_youtube=True)
         Sname = song.song_name
-        if len(song.album_artists) ==1:
-            Sartist = song.album_artists[0]
-        else: 
-            Sartist = ' '.join(song.album_artists)
+        Sartist = song.album_artists
         Filename = song.file_name+'.' + format
         IFilename = song.file_name+'.mp3'
         Scaption = song.lyrics
@@ -47,11 +44,10 @@ async def MusicDownloader(query: str = None, format: str = None):
                 print('Converting to flac')
                 if os.name == 'nt':
                     subprocess.Popen(['ffmpeg', '-i', song.file_name+'.mp3', Filename],
-                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True).communicate()
+                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True).communicate()
                 else:
-                    subprocess.Popen(["ffmpeg", "-i", song.file_name+'.mp3', Filename, "-map", "1", 
-                    "-map_metadata", "0", "-c", "copy", "-movflags", "use_metadata_tags"],
-                    stdout=subprocess.PIPE).stdout.read()
+                    subprocess.Popen(
+                        ["ffmpeg", "-i", song.file_name+'.mp3', Filename, "-map", "1", "-map_metadata", "0", "-c", "copy", "-movflags", "use_metadata_tags"], stdout=subprocess.PIPE).stdout.read()
     else:
         song = Gather.from_search_term(
             query=query, output_format=format, use_youtube=True)
@@ -67,12 +63,10 @@ async def MusicDownloader(query: str = None, format: str = None):
                 print('Converting to flac')
                 if os.name == 'nt':
                     subprocess.Popen(['ffmpeg', '-i', song[0].file_name+'.mp3', Filename],
-                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True).communicate()
+                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True).communicate()
                 else:
                     subprocess.Popen(
-                        ["ffmpeg", "-i", song[0].file_name+'.mp3', Filename,
-                        "-map", "1", "-map_metadata", "0", "-c", "copy", "-movflags", "use_metadata_tags"],
-                        stdout=subprocess.PIPE).stdout.read()
+                        ["ffmpeg", "-i", song[0].file_name+'.mp3', Filename, "-map", "1", "-map_metadata", "0", "-c", "copy", "-movflags", "use_metadata_tags"], stdout=subprocess.PIPE).stdout.read()
 Sname = None
 Sartist = None
 Scaption = None
