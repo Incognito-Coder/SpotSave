@@ -1,2 +1,2 @@
 echo 'SpotSave by Incognito Coder'
-python3 -m SpotBot
+python3 -m SpotBot/bot.py
