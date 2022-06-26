@@ -6,7 +6,7 @@ from pyrogram.types.bots_and_keyboards.inline_keyboard_markup import InlineKeybo
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 from pyrogram.types import ReplyKeyboardRemove
 import pyromod.listen
-from pyrogram import Client, filters, errors
+from pyrogram import Client, filters
 from pyrogram.types import Message
 import SpotBot.spotify as spotify
 import os
