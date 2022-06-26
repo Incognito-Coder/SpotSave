@@ -1,21 +1,25 @@
 import urllib.request
-from SpotBot.spotify import MusicDownloader
+from SpotBot.spotify import MusicDownloader, AlbumDownloader
 from pyrogram.types.bots_and_keyboards.reply_keyboard_markup import ReplyKeyboardMarkup
 from pyrogram.types.bots_and_keyboards.inline_keyboard_button import InlineKeyboardButton
 from pyrogram.types.bots_and_keyboards.inline_keyboard_markup import InlineKeyboardMarkup
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 from pyrogram.types import ReplyKeyboardRemove
 import pyromod.listen
-from pyrogram import Client, filters
+from pyrogram import Client, filters, errors
 from pyrogram.types import Message
 import SpotBot.spotify as spotify
 import os
 from SpotBot.config import Configs
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
 icbot = Client('SpotSaveBot', bot_token=Configs.API_KEY,
                api_id=Configs.API_ID, api_hash=Configs.API_HASH)
 
 MAIN_KEYS = ReplyKeyboardMarkup(
-    [['Download as FLAC', 'Download as MP3']], resize_keyboard=True)
+    [['Download as FLAC', 'Download as MP3'], ['Album Downloader']], resize_keyboard=True)
 
 
 @icbot.on_message(filters.private & filters.command(['start', 'Start'], '/'))
@@ -78,4 +82,26 @@ async def flacdl(Client, msg: Message):
         else:
             await msg.reply_text(f'You\'ve backed to main.', reply_markup=MAIN_KEYS)
 
+
+@icbot.on_message(filters.private & filters.regex('Album Downloader'))
+async def album(Client, msg: Message):
+    status = None
+    try:
+        member = await icbot.get_chat_member(Configs.CHANNEL, msg.from_user.id)
+        status = member.status.value
+    except UserNotParticipant:
+        pass
+    if not status in ['member', 'owner', 'administrator']:
+        await msg.reply_text(f'You must be a member of our channel\n@{Configs.CHANNEL}',
+                             reply_markup=ReplyKeyboardRemove(True))
+    else:
+        inputs = await Client.ask(chat_id=msg.from_user.id, text='Album Downloader\nPaste Spotify album url\nAbort /cancel', reply_markup=ReplyKeyboardRemove(True))
+        if not inputs.text == '/cancel':
+            await msg.reply_text('__Searching for result.__')
+            await AlbumDownloader(inputs.text)
+            await msg.reply_photo(photo=spotify.Scover, caption=f'Name : {spotify.Sname}\nArtists : {spotify.Sartist}', reply_markup=ReplyKeyboardRemove(True))
+            await msg.reply_document(document=spotify.Sname+'.zip', caption=f'🎧 Downloaded By [{Configs.BOT_NAME}](https://telegram.me/{Configs.BOT_UNAME}) Bot', reply_markup=MAIN_KEYS)
+            os.remove(spotify.Sname+'.zip')
+        else:
+            await msg.reply_text(f'You\'ve backed to main.', reply_markup=MAIN_KEYS)
 icbot.run()
