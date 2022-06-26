@@ -5,7 +5,7 @@
 ### Configuration
 Replace values of config.py ,set with your own.
 ### Python dependencies
-Install the necessary Python dependencies by moving to the project directory and running: \
+Install the necessary Python dependencies by moving to the project directory and running:
 ```bash
 pip3 install -r requirements.txt
 ```
