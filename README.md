@@ -11,7 +11,8 @@ pip3 install -r requirements.txt
 ```
 This will install all the necessary python packages.
 ### OS dependencies
-**If You Running MS Windows** : download and install ffmpeg from [here](https://www.ffmpeg.org/download.html#build-windows) or install with _scoop_ package manager \
+**If You Running MS Windows** : download and install ffmpeg from [here](https://www.ffmpeg.org/download.html#build-windows) or install with _scoop_ package manager
+
 **Ubuntu** : 
 ```bash 
 sudo apt install ffmpeg 
