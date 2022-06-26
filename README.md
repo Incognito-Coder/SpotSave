@@ -6,12 +6,20 @@
 Replace values of config.py ,set with your own.
 ### Python dependencies
 Install the necessary Python dependencies by moving to the project directory and running: \
-```pip3 install -r requirements.txt``` \
+```bash
+pip3 install -r requirements.txt
+```
 This will install all the necessary python packages.
 ### OS dependencies
 **If You Running MS Windows** : download and install ffmpeg from [here](https://www.ffmpeg.org/download.html#build-windows) or install with _scoop_ package manager \
-**Ubuntu** : ```sudo apt install ffmpeg``` \
-**ArchLinux** : ```sudo pacman -Sy ffmpeg```
+**Ubuntu** : 
+```bash 
+sudo apt install ffmpeg 
+```
+**ArchLinux** : 
+```bash 
+sudo pacman -Sy ffmpeg
+```
 ## Starting the bot.
 Once your configuration is complete, simply run the bat file(if on windows) or run (Linux): \
 ```sudo ./start.sh```
