@@ -3,7 +3,7 @@
 ![Banner](image.png)
 ## Available on Telegram as [@SpotSaveBot](https://t.me/spotsavebot)
 ### Configuration
-Replace values of config.py ,set with your own.
+Replace values of config.py, set with your own.
 ### Python dependencies
 Install the necessary Python dependencies by moving to the project directory and running:
 ```bash
