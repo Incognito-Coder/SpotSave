@@ -9,10 +9,10 @@ Install the necessary Python dependencies by moving to the project directory and
 ```bash
 pip3 install -r requirements.txt
 ```
-This will install all the necessary python packages.
-Linux users can skip this command and use _setup.sh_ script to setup dependencies.
+This will install all the necessary python packages. Linux users can skip this command and use _setup.sh_ script to setup dependencies.
 ### OS dependencies
-**If You Running MS Windows** : download and install ffmpeg from [here](https://www.ffmpeg.org/download.html#build-windows) or install with _scoop_ package manager
+**If You Running MS Windows** : download and install ffmpeg from [here](https://www.ffmpeg.org/download.html#build-windows) or install with _scoop_ package manager.
+
 **Linux** : 
 ```bash 
 ./setup.sh 
