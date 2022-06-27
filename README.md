@@ -10,17 +10,14 @@ Install the necessary Python dependencies by moving to the project directory and
 pip3 install -r requirements.txt
 ```
 This will install all the necessary python packages.
+Linux users can skip this command and use _setup.sh_ script to setup dependencies.
 ### OS dependencies
 **If You Running MS Windows** : download and install ffmpeg from [here](https://www.ffmpeg.org/download.html#build-windows) or install with _scoop_ package manager
-
-**Ubuntu** : 
+**Linux** : 
 ```bash 
-sudo apt install ffmpeg 
+./setup.sh 
 ```
-**ArchLinux** : 
-```bash 
-sudo pacman -Sy ffmpeg
-```
+If you got any errors on the script, please open a issue and we will fix it.
 ## Starting the bot.
 Once your configuration is complete, simply run the bat file(if on windows) or run (Linux): \
 ```sudo ./start.sh```
