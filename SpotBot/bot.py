@@ -1,4 +1,7 @@
+import asyncio
 import urllib.request
+
+from telegram import MessageId
 from SpotBot.spotify import MusicDownloader, AlbumDownloader
 from pyrogram.types.bots_and_keyboards.reply_keyboard_markup import ReplyKeyboardMarkup
 from pyrogram.types.bots_and_keyboards.inline_keyboard_button import InlineKeyboardButton
@@ -13,7 +16,7 @@ import os
 from SpotBot.config import Configs
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.ERROR)
 
 icbot = Client('SpotSaveBot', bot_token=Configs.API_KEY,
                api_id=Configs.API_ID, api_hash=Configs.API_HASH)
@@ -46,9 +49,15 @@ async def mp3dl(Client, msg: Message):
     else:
         inputs = await Client.ask(chat_id=msg.from_user.id, text='Paste Spotify song url or enter search query\nExample: **Cool - Dua Lipa**\nAbort /cancel', reply_markup=ReplyKeyboardRemove(True))
         if not inputs.text == '/cancel':
-            await msg.reply_text('__Searching for result.__')
+            info_searching = await icbot.send_message(chat_id=msg.chat.id, text='__Searching for result.__')
+            spotify.Finder(0, inputs.text)
+            await icbot.edit_message_text(chat_id=msg.chat.id, text=f'**Found** : {spotify.Sname}', message_id=info_searching.id)
+            await asyncio.sleep(0.5)
+            await icbot.edit_message_text(
+                chat_id=msg.chat.id, text=f'**Downloading** {spotify.Sname}', message_id=info_searching.id)
             await MusicDownloader(
                 query=inputs.text, format='mp3')
+            await icbot.delete_messages(msg.chat.id, info_searching.id)
             await msg.reply_text(f'{spotify.Scaption}\n\n**Download of {spotify.Filename} complete.**\n__Uploading to you ...__', reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton('Album Cover', url=spotify.Scover)]]))
             await msg.reply_audio(audio=spotify.Filename, caption=f'🎧 Downloaded By [{Configs.BOT_NAME}](https://telegram.me/{Configs.BOT_UNAME}) Bot', reply_markup=MAIN_KEYS)
             os.remove(spotify.Filename)
@@ -70,9 +79,15 @@ async def flacdl(Client, msg: Message):
     else:
         inputs = await Client.ask(chat_id=msg.from_user.id, text='FLAC Downloader\nPaste Spotify song url or enter search query\nExample: **Cool - Dua Lipa**\nAbort /cancel', reply_markup=ReplyKeyboardRemove(True))
         if not inputs.text == '/cancel':
-            await msg.reply_text('__Searching for result.__')
+            info_searching = await icbot.send_message(chat_id=msg.chat.id, text='__Searching for result.__')
+            spotify.Finder(0, inputs.text)
+            await icbot.edit_message_text(chat_id=msg.chat.id, text=f'**Found** : {spotify.Sname}', message_id=info_searching.id)
+            await asyncio.sleep(0.5)
+            await icbot.edit_message_text(
+                chat_id=msg.chat.id, text=f'**Downloading** {spotify.Sname}', message_id=info_searching.id)
             await MusicDownloader(
                 query=inputs.text, format='flac')
+            await icbot.delete_messages(msg.chat.id, info_searching.id)
             await msg.reply_text(f'{spotify.Scaption}\n\n**Download of {spotify.Filename} complete.**\n__Uploading to you ...__', reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton('Album Cover', url=spotify.Scover)]]))
             urllib.request.urlretrieve(spotify.Scover, 'thumb.jpg')
             await msg.reply_audio(audio=spotify.Filename, caption=f'🎧 Downloaded By [{Configs.BOT_NAME}](https://telegram.me/{Configs.BOT_UNAME}) Bot', thumb='thumb.jpg', performer=spotify.Sartist, reply_markup=MAIN_KEYS)
@@ -97,8 +112,14 @@ async def album(Client, msg: Message):
     else:
         inputs = await Client.ask(chat_id=msg.from_user.id, text='Album Downloader\nPaste Spotify album url\nAbort /cancel', reply_markup=ReplyKeyboardRemove(True))
         if not inputs.text == '/cancel':
-            await msg.reply_text('__Searching for result.__')
+            info_searching = await icbot.send_message(chat_id=msg.chat.id, text='__Searching for result.__')
+            spotify.Finder(0, inputs.text)
+            await icbot.edit_message_text(chat_id=msg.chat.id, text=f'**Found** : {spotify.Sname}', message_id=info_searching.id)
+            await asyncio.sleep(0.5)
+            await icbot.edit_message_text(
+                chat_id=msg.chat.id, text=f'**Downloading** {spotify.Sname}', message_id=info_searching.id)
             await AlbumDownloader(inputs.text)
+            await icbot.delete_messages(msg.chat.id, info_searching.id)
             await msg.reply_photo(photo=spotify.Scover, caption=f'Name : {spotify.Sname}\nArtists : {spotify.Sartist}', reply_markup=ReplyKeyboardRemove(True))
             await msg.reply_document(document=spotify.Sname+'.zip', caption=f'🎧 Downloaded By [{Configs.BOT_NAME}](https://telegram.me/{Configs.BOT_UNAME}) Bot', reply_markup=MAIN_KEYS)
             os.remove(spotify.Sname+'.zip')
