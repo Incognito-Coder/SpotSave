@@ -3,13 +3,9 @@ import spotdl.search.song_gatherer as Gather
 from spotdl.download.downloader import DownloadManager
 from spotdl.search import SpotifyClient
 import re
-import logging
 import os
 import subprocess
-
 from SpotBot.config import Configs
-
-logging.basicConfig(level=logging.INFO)
 
 SpotifyClient.init(client_id=Configs.CLIENT_ID,
                    client_secret=Configs.CLIENT_SECRET, user_auth=False)
@@ -101,6 +97,31 @@ async def AlbumDownloader(url: str = None):
     for file in songs:
         archive.write(f'{file.file_name}.mp3', f'{file.file_name}.mp3')
         os.remove(f'{file.file_name}.mp3')
+
+
+def Finder(type: int, url=str):
+    global Sname
+    if type == 0:
+        regex = re.compile(
+            r'^(?:http|ftp)s?://'  # http:// or https://
+            # domain...
+            r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'
+            r'localhost|'  # localhost...
+            r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
+            r'(?::\d+)?'  # optional port
+            r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+        if(re.match(regex, url)):
+            song = Gather.from_spotify_url(
+                spotify_url=url, output_format=format)
+            Sname = song.song_name
+        else:
+            song = Gather.from_search_term(
+                query=url, output_format=format)
+            Sname = song[0].song_name
+    elif type == 1:
+        songs = Gather.from_album(album_url=url)
+        for o in songs:
+            Sname = o.album_name
 
 
 Sname = None
