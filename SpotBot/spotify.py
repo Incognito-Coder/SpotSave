@@ -118,7 +118,7 @@ def Finder(type: int, url=str):
             try:
                 song = Gather.from_spotify_url(
                     spotify_url=url, output_format=format)
-                Sname = song.song_name
+                Sname = f'**Found** : {song.song_name}'
             except Exception as e:
                 Sname = str(e)
                 return False
@@ -136,7 +136,7 @@ def Finder(type: int, url=str):
         try:
             songs = Gather.from_album(album_url=url)
             for o in songs:
-                Sname = o.album_name
+                Sname = f'**Found** : {o.album_name}'
         except Exception as e:
             Sname = str(e)
             return False
