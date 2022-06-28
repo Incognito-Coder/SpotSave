@@ -113,7 +113,7 @@ async def album(Client, msg: Message):
         inputs = await Client.ask(chat_id=msg.from_user.id, text='Album Downloader\nPaste Spotify album url\nAbort /cancel', reply_markup=ReplyKeyboardRemove(True))
         if not inputs.text == '/cancel':
             info_searching = await icbot.send_message(chat_id=msg.chat.id, text='__Searching for result.__')
-            result = spotify.Finder(0, inputs.text)
+            result = spotify.Finder(1, inputs.text)
             await icbot.edit_message_text(chat_id=msg.chat.id, text=spotify.Sname, message_id=info_searching.id)
             if result:
                 await asyncio.sleep(0.5)
