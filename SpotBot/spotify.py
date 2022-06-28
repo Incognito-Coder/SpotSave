@@ -1,3 +1,4 @@
+from cmath import e
 import zipfile
 import spotdl.search.song_gatherer as Gather
 from spotdl.download.downloader import DownloadManager
@@ -53,8 +54,11 @@ async def MusicDownloader(query: str = None, format: str = None):
                     subprocess.Popen(
                         ["ffmpeg", "-i", song.file_name+'.mp3', Filename, "-map", "1", "-map_metadata", "0", "-c", "copy", "-movflags", "use_metadata_tags"], stdout=subprocess.PIPE).stdout.read()
     else:
-        song = Gather.from_search_term(
-            query=query, output_format=format)
+        try:
+            song = Gather.from_search_term(
+                query=query, output_format=format)
+        except Exception(e):
+            return print(f'error{e}')
         Sname = song[0].song_name
         if len(song[0].album_artists) == 1:
             Sartist = song[0].album_artists[0]
@@ -111,17 +115,31 @@ def Finder(type: int, url=str):
             r'(?::\d+)?'  # optional port
             r'(?:/?|[/?]\S+)$', re.IGNORECASE)
         if(re.match(regex, url)):
-            song = Gather.from_spotify_url(
-                spotify_url=url, output_format=format)
-            Sname = song.song_name
+            try:
+                song = Gather.from_spotify_url(
+                    spotify_url=url, output_format=format)
+                Sname = song.song_name
+            except Exception as e:
+                Sname = str(e)
+                return False
         else:
-            song = Gather.from_search_term(
-                query=url, output_format=format)
-            Sname = song[0].song_name
+            try:
+                song = Gather.from_search_term(
+                    query=url, output_format=format)
+                Sname = f'**Found** : {song[0].song_name}'
+                return True
+            except Exception as e:
+                Sname = str(e)
+                return False
+
     elif type == 1:
-        songs = Gather.from_album(album_url=url)
-        for o in songs:
-            Sname = o.album_name
+        try:
+            songs = Gather.from_album(album_url=url)
+            for o in songs:
+                Sname = o.album_name
+        except Exception as e:
+            Sname = str(e)
+            return False
 
 
 Sname = None
